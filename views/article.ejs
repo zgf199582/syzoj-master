@@ -1,0 +1,57 @@
+<% this.title = article.title + ' - 帖子'; %>
+<% include header %>
+<style type="text/css" xmlns:style="http://www.w3.org/1999/xhtml">
+    .small{
+    font-size: 0.7em;
+    }
+</style>
+<div class="padding">
+  <h1><%= article.title %></h1>
+ 	<p style="font_size: 0.7em"><img style="vertical-align: middle;" src="<%= syzoj.utils.gravatar(article.user.email, 64) %>" width="32" height="32">
+ 		<a href="<%= syzoj.utils.makeUrl(['user', article.user_id]) %>"><%= article.user.username %></a><% if (article.user.nameplate) { %><%- article.user.nameplate %><% } %> 于 <%= syzoj.utils.formatDate(article.public_time) %> 发表，<%= syzoj.utils.formatDate(article.update_time) %> 最后更新
+        <% if (article.allowedEdit) { %>
+        <a class="ui mini red button" href="<%= syzoj.utils.makeUrl(['article', article.id, 'delete']) %>">删除文章</a>
+        <a class="ui mini button" href="<%= syzoj.utils.makeUrl(['article', article.id, 'edit']) %>">编辑文章</a>
+        <% } %>
+ 	</p>
+  <div class="ui existing segment">
+	  <div id="content" class="font-content"><%- article.content %></div>
+  </div>
+  <% if (comments.length) { %>
+  <div class="ui comments" style="max-width: none;">
+    <h3 class="ui dividing header">共 <%= comments.length %> 条回复</h3>
+    <% for (let comment of comments) { %>
+      <div class="comment">
+        <a class="avatar">
+          <img src="<%= syzoj.utils.gravatar(comment.user.email, 120) %>">
+        </a>
+        <div class="content">
+          <a class="author" href="<%= syzoj.utils.makeUrl(['user', comment.user_id]) %>"><%= comment.user.username %></a><% if (comment.user.nameplate) { %><%- comment.user.nameplate %><% } %>
+          <div class="metadata">
+            <span class="date"><%= syzoj.utils.formatDate(comment.public_time) %></span>
+          </div>
+          <div class="text font-content"><%- comment.content %></div>
+          <% if (comment.allowedEdit) { %>
+            <div class="actions"><a href="<%= syzoj.utils.makeUrl(['article', article.id, 'comment', comment.id, 'delete']) %>">删除</a></div>
+          <% } %>
+        </div>
+      </div>
+    <% } %>
+  </div>
+  <% } %>
+  <br>
+  <div style="margin-bottom: 50px; ">
+    <% include page %>
+  </div>
+   <% if (article.allowedComment) { %>
+   <form class="ui reply form" method="post" action="<%= syzoj.utils.makeUrl(['article', article.id, 'comment']) %>">
+      <div class="field">
+        <textarea name="comment"></textarea>
+      </div>
+      <button type="submit" class="ui labeled submit icon button">
+        <i class="icon edit"></i> 回复
+      </button>
+   </form>
+   <% } %>
+</div>
+<% include footer %>

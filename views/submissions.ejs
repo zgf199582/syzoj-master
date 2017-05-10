@@ -1,0 +1,96 @@
+<% this.title = '提交记录' %>
+<script src="https://cdn.staticfile.org/textfit/2.3.1/textFit.min.js"></script>
+<% include header %>
+<% include util %>
+<div class="padding">
+  <form action="<%= syzoj.utils.makeUrl(['submissions']) %>" class="ui mini form" method="get" role="form" id="form">
+    <div class="inline fields" style="margin-bottom: 25px; white-space: nowrap; ">
+      <label style="font-size: 1.2em; margin-right: 1px; ">题目：</label>
+      <div class="field"><input name="problem_id" style="width: 50px; " type="text" value="<%= form.problem_id %>"></div>
+      <label style="font-size: 1.2em; margin-right: 1px; ">提交者：</label>
+      <div class="field"><input name="submitter" style="width: 100px; " type="text" value="<%= form.submitter %>"></div>
+      <label style="font-size: 1.2em; margin-right: 1px; ">分数：</label>
+      <div class="field" style="padding-right: 6px; "><input name="min_score" style="width: 48px; " type="text" value="<%= form.min_score || 0 %>"></div>
+      <label style="font-size: 1.2em; margin-right: 7px; ">～</label>
+      <div class="field"><input name="max_score" style="width: 48px; " type="text" value="<%= form.max_score || 100 %>"></div>
+      <label style="font-size: 1.2em; margin-right: 1px; ">语言：</label>
+      <div class="field">
+        <div class="ui fluid selection dropdown" id="select_language" style="width: 110px; ">
+          <input type="hidden" name="language" value="<%= form.language %>">
+          <i class="dropdown icon"></i>
+          <div class="default text"></div>
+          <div class="menu">
+            <div class="item" data-value="">不限</div>
+            <% for (let lang in syzoj.config.languages) { %>
+              <div class="item" data-value="<%= lang %>"><%= syzoj.config.languages[lang].show %></div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+      <label style="font-size: 1.2em; margin-right: 1px; ">状态：</label>
+      <div class="field">
+        <div class="ui fluid selection dropdown" id="select_status" style="width: 210px; ">
+          <input type="hidden" name="status" value="<%= form.status %>">
+          <i class="dropdown icon"></i>
+          <div class="default text"></div>
+          <div class="menu">
+            <div class="item" data-value="">不限<i class="dropdown icon" style="visibility: hidden; "></i></div>
+            <% for (let status in this.icon) { %>
+              <div class="item" data-value="<%= status %>"><span class="status <%= status.toLowerCase().split(' ').join('_') %>"><i class="<%= this.icon[status] %> icon"></i> <%= status %></div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+      <button class="ui labeled icon mini button" type="submit">
+        <i class="search icon"></i>
+        搜索
+      </button>
+      <% if (user) { %>
+      <a class="ui mini labeled icon blue button" style="margin-left: auto; " id="my_submit">
+        <i class="user icon"></i>
+        我的提交
+      </a>
+      <script>
+      $(function () {
+        $('#my_submit').click(function () {
+          $('[name=submitter]').val(<%- JSON.stringify(user.username) %>);
+          $('#form').submit();
+        });
+      });
+      </script>
+      <% } %>
+    </div>
+  </form>
+  <table class="ui very basic center aligned table" style="white-space: nowrap; visibility: hidden; " id="table">
+    <thead>
+      <tr>
+        <th>编号</th>
+        <th>题目</th>
+        <th>状态</th>
+        <th>分数</th>
+        <th>总时间</th>
+        <th>内存</th>
+        <th>代码</th>
+        <th>提交者</th>
+        <th>提交时间</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (let judge of judge_state) { %>
+        <tr id="submissions_<%= judge.id %>"><% include submissions_item %></tr>
+      <% } %>
+    </tbody>
+  </table>
+  <script>
+  document.getElementById('table').style.visibility = '';
+  </script>
+  <br>
+  <% include page %>
+</div>
+<script>
+$(function () {
+  $('#select_language').dropdown();
+  $('#select_status').dropdown();
+});
+</script>
+<% include footer %>

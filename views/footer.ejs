@@ -1,0 +1,16 @@
+</div>
+    <div class="ui vertical footer segment">
+      <div class="ui center aligned container">
+        <span style="color: #999;"><%= syzoj.config.title %> Powered by <a href="https://github.com/syzoj/syzoj" target="_blank">SYZOJ</a>.</span>
+      </div>
+    </div>
+
+<script src="/libs/semantic-ui/semantic.min.js"></script>
+<script src="/libs/Chart.js/Chart.bundle.min.js"></script>
+<script type="text/javascript">
+$("#logout").click(function () {
+    window.location.href = <%- JSON.stringify(syzoj.utils.makeUrl(['logout'], { url: req.originalUrl })) %>;
+});
+</script>
+</body>
+</html>

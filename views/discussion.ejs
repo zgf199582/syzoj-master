@@ -1,0 +1,32 @@
+<% this.title = '讨论' %>
+<% include header %>
+<div class="padding">
+  <div class="ui grid">
+    <div class="row">
+      <div class="column">
+        <a href="<%= syzoj.utils.makeUrl(['article', 0, 'edit']) %>" class="ui mini right floated button">发帖</a>
+      </div>
+    </div>
+  </div>
+  <table class="ui very basic table">
+    <thead>
+      <tr>
+        <th>标题</th>
+        <th>作者</th>
+        <th>发表时间</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% for (let article of articles) { %>
+        <tr>
+            <td><a href="<%= syzoj.utils.makeUrl(['article', article.id]) %>"><%= article.title %></a></td>
+            <td><a href="<%= syzoj.utils.makeUrl(['user', article.user_id]) %>"><%= article.user.username %></a><% if (article.user.nameplate) { %><%- article.user.nameplate %><% } %></td>
+            <td><%= syzoj.utils.formatDate(article.public_time) %></td>
+        </tr>
+    <% } %>
+    </tbody>
+  </table>
+  <br>
+    <% include page %>
+</div>
+<% include footer %>
